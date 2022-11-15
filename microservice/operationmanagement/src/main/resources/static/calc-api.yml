@@ -1,0 +1,116 @@
+openapi: "3.0.3"
+
+security:
+  - {}
+
+info:
+  title: "Calculator POC API"
+  description: "A calculator proof of concept."
+  contact:
+    name: "Rodrigo Valcárcel"
+  version: "0.0.1"
+
+tags:
+  - name: Operations
+    description: 'Operation enpoints.'
+
+paths:
+  /operation:
+    post:
+      tags:
+        - Operations
+      summary: 'This service returns the result of an operation.'
+      operationId: getOperationResult
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationRequest'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResult'
+        '400':
+          description: 'Invalid input'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: 'Internal server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        default:
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+components:
+  schemas:
+    ApiError:
+      type: object
+      description: 'Error response'
+      properties:
+        timestamp:
+          type: string
+          description: 'Timestamp of the error'
+          example: '2022-11-13T17:11:00.529+00:00'
+        error:
+          type: string
+          description: 'Error message'
+          example: 'Bad Request'
+        message:
+          type: string
+          description: 'Error message'
+          example: 'Invalid input'
+        status:
+          type: integer
+          description: 'HTTP status code'
+          example: 418
+          minimum: 100
+          maximum: 600
+        path:
+          type: string
+          description: 'Request path'
+          example: '/operation'
+
+    OperationRequest:
+      type: object
+      description: 'Operation request'
+      required:
+        - firstOperand
+        - secondOperand
+        - operation
+      properties:
+        firstOperand:
+          type: number
+          description: 'First number'
+          example: 1234.5678
+        secondOperand:
+          type: number
+          description: 'Second number'
+          example: 1234.5678
+        operation:
+            $ref: '#/components/schemas/OperationType'
+
+    OperationType:
+      type: string
+      description: 'Operation'
+      example: 'add'
+      enum: [add, subtract]
+
+    OperationResult:
+      type: object
+      description: 'Result of an operation request.'
+      properties:
+        result:
+          type: number
+          description: 'Result of the operation.'
+          example: 2469.1356
