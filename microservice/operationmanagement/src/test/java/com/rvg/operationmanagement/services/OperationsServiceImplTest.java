@@ -5,6 +5,7 @@ import com.rvg.operationmanagement.domain.model.OperationRequest;
 import com.rvg.operationmanagement.domain.model.OperationResult;
 import com.rvg.operationmanagement.domain.services.OperationsService;
 import com.rvg.operationmanagement.exceptions.UnknownOperationException;
+import io.corp.calculator.TracerAPI;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
