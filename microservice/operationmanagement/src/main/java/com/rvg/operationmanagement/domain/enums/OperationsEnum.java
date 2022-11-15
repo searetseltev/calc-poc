@@ -7,6 +7,9 @@ public enum OperationsEnum {
     ADD,
 
     @JsonProperty("subtract")
-    SUBTRACT
+    SUBTRACT,
+
+    @JsonProperty("unknown")
+    UNKNOWN
 }
 

@@ -1,10 +1,6 @@
 package com.rvg.operationmanagement.api.mappers;
 
-import com.rvg.operationmanagement.api.model.OperationRequestDTO;
 import com.rvg.operationmanagement.api.model.OperationResultDTO;
-import com.rvg.operationmanagement.api.model.OperationTypeDTO;
-import com.rvg.operationmanagement.domain.enums.OperationsEnum;
-import com.rvg.operationmanagement.domain.model.OperationRequest;
 import com.rvg.operationmanagement.domain.model.OperationResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
