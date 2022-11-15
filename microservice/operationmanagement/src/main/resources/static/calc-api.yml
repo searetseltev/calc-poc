@@ -79,11 +79,15 @@ components:
         path:
           type: string
           description: 'Request path'
-          example: '/operation/add'
+          example: '/operation'
 
     OperationRequest:
       type: object
       description: 'Operation request'
+      required:
+        - firstOperand
+        - secondOperand
+        - operation
       properties:
         firstOperand:
           type: number
