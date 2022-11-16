@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class OperationResquestMapperTest {
     @InjectMocks
-    OperationRequestMapper operationRequestMapper = new OperationRequestMapperImpl();
+    final OperationRequestMapper operationRequestMapper = new OperationRequestMapperImpl();
 
     private OperationRequestDTO operationRequestDTO;
 

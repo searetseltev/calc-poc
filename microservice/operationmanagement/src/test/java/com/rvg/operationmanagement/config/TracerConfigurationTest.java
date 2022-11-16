@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(MockitoExtension.class)
 class TracerConfigurationTest {
     @InjectMocks
-    TracerConfiguration tracerConfiguration = new TracerConfiguration();
+    final TracerConfiguration tracerConfiguration = new TracerConfiguration();
 
     @Test
     void create() {

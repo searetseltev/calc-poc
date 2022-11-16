@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class OperationResultMapperTest {
     @InjectMocks
-    OperationResultMapper operationResultMapper = new OperationResultMapperImpl();
+    final OperationResultMapper operationResultMapper = new OperationResultMapperImpl();
 
     private OperationResult operationResult;
 
