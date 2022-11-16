@@ -41,7 +41,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>tracer</groupId>
+            <groupId>io.corp.calculator</groupId>
             <artifactId>tracer</artifactId>
             <version>1.0.0</version>
         </dependency>
