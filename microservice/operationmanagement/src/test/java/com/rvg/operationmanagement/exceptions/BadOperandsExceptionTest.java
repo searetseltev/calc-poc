@@ -10,14 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Tag("UnitTest")
-@DisplayName("UnknownOperationExceptionTest")
+@DisplayName("BadOperandsExceptionTest")
 @ExtendWith(MockitoExtension.class)
-class UnknownOperationExceptionTest {
+class BadOperandsExceptionTest {
 
     @Test
     void create() {
-        UnknownOperationException unknownOperationException = new UnknownOperationException("test");
-        assertNotNull(unknownOperationException);
-        assertEquals("test", unknownOperationException.getMessage());
+        BadOperandsException badOperandsException = new BadOperandsException("test");
+        assertNotNull(badOperandsException);
+        assertEquals("test", badOperandsException.getMessage());
     }
 }
