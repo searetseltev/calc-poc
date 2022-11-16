@@ -13,7 +13,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-config:3.1.5" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-config:3.1.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter:3.1.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-context:3.1.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-crypto:5.7.4" level="project" />
@@ -64,7 +64,7 @@
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-cache:2.7.5" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.3.23" level="project" />
     <orderEntry type="library" name="Maven: com.stoyanr:evictor:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.5" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.4" level="project" />
     <orderEntry type="library" name="Maven: org.mapstruct:mapstruct:1.5.3.Final" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.plugins:maven-compiler-plugin:3.10.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.shared:maven-shared-utils:3.3.4" level="project" />
