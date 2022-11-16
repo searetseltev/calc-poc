@@ -6,6 +6,7 @@ import com.rvg.operationmanagement.domain.services.OperationsService;
 import com.rvg.operationmanagement.exceptions.UnknownOperationException;
 import io.corp.calculator.TracerImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -13,6 +14,9 @@ import java.math.BigDecimal;
 @Slf4j
 @Service
 public class OperationsServiceImpl implements OperationsService {
+
+    @Autowired
+    TracerImpl tracer;
 
     @Override
     public OperationResult calculate(OperationRequest operationRequest) throws UnknownOperationException {
@@ -30,7 +34,7 @@ public class OperationsServiceImpl implements OperationsService {
                 throw new UnknownOperationException("Unknown operation: " + operationRequest.getOperation());
         }
 
-        new TracerImpl().trace(result);
+        tracer.trace(result);
         return new OperationResult(result);
     }
 }

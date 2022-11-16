@@ -5,11 +5,13 @@ import com.rvg.operationmanagement.domain.model.OperationRequest;
 import com.rvg.operationmanagement.domain.model.OperationResult;
 import com.rvg.operationmanagement.domain.services.OperationsService;
 import com.rvg.operationmanagement.exceptions.UnknownOperationException;
+import io.corp.calculator.TracerImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -22,6 +24,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class OperationsServiceImplTest {
     @InjectMocks
     OperationsService operationsService = new OperationsServiceImpl();
+
+    @Mock
+    TracerImpl tracer;
 
     private static final BigDecimal FIRST_OPERAND = new BigDecimal(10);
     private static final BigDecimal SECOND_OPERAND = new BigDecimal(5);
