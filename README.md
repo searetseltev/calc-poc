@@ -9,18 +9,35 @@ This is a proof of concept for a calculator microservice.
 - Maven: 3.8.1
 
 ## Modules
-There is three modules on the microservice:
- - discoveryserver: This module will setup a [Netflix Eureka service registry](https://github.com/spring-cloud/spring-cloud-netflix) to register posible future microservices.
- - configserver: This module will serve configurations to the microservices.
- - operationmanagement: This is the calculator microservice. Will connect to the discoveryserver and take the configuration from the configserver. This module has a rest API to calculate the operations. For now, only can SUM and SUBTRACT, but is prepared to add more operations easily.
+### Discovery Server
+#### Description
+This module will setup a [Netflix Eureka service registry](https://github.com/spring-cloud/spring-cloud-netflix) to register posible future microservices.
 
-## Execution with Maven
+### Config Server
+#### Description
+This module will serve configurations to the microservices. 
+#### External configurations
+As proof of concept, the configuration served to the `operationmanagement` microservice will be downloaded from another server. The configuration for the `operationmanagement` is at [https://github.com/searetseltev/microservices](https://github.com/searetseltev/microservices).
+
+### Operation Management
+#### Description
+This is the calculator microservice. Will connect to the Discovery Server and take the configuration from the Config Server. 
+
+#### API definition and generation
+For this module, there is a `yaml` file on `src/main/resources/static/calc-api.yml` to define the API from openApi (using the specifications for `3.0.3`). This file is used to generate the interface for the endpoints and the necessary DTOs with the `openapi-generator` plugin automatically launched at build.
+
+To help testing the API, `swagger-ui` it's linked to the `calc-api.yml` to be consistent with the actual build.
+
+The rest API has been prepared to calculate certain operations. For now, only can ADD and SUBTRACT, but more operations can be implemented easily.
+
+## Running the project
+### Maven
 At the microservice root, realize a `clean install`:
 `mvn clean install`
 
 This will realize a "clean install" downloading all the dependencies and generating the necessary files on target (including API DTOs and more).
 
-Now, you can execute the modules in orden:
+Now, you can execute the modules in order:
 - Go into discoveryserver path and execute: `mvn spring-boot:run`
 - Go into configserver path and execute: `mvn spring-boot:run`
 - With the two servers up, go into the operationmanagement path and execute: `mvn spring-boot:run`
@@ -35,7 +52,7 @@ You can access the API documentation going to [localhost:8083/swagger-ui/index.h
 }
 ```
 
-## Generate JAR
+### Java JAR
 To generate JAR files, go to the microservice project root and execute: `mvn clean package`. This will create the JARs for the modules.
 - Go into discoveryserver/target and execute: `java -jar discoveryserver-0.0.1-SNAPSHOT.jar`
 - Go into configserver/target and execute: `java -jar configserver-0.0.1-SNAPSHOT.jar`
@@ -45,3 +62,40 @@ Now, you will have access to same tests:
 - Eureka server status on [localhost:8761](http://localhost:8761/).
 - API documentation and testing on [localhost:8083/swagger-ui/index.html](http://localhost:8083/swagger-ui/index.html).
 
+## Tracer library
+At the root POM, there is a dependency for tracer library. It could be dropped at lib folder on project and easily add it giving her route to the project... but at deploy, it's possible that this library has not been copied on the same route. The solution was integrate the lib on a local maven repository. 
+
+### How to
+We have three files:
+- tracer-1.0.0.jar
+- tracer-1.0.0-javadoc.jar
+- tracer-1.0.0-sources.jar
+
+Go into the folder where there are these files and execute the next maven command (you can change values for groupId and artifactId):
+`mvn install:install-file -Dfile=.\tracer-1.0.0.jar -DgroupId=tracer -DartifactId=tracer -Dversion=1.0.0 -Dpackaging=jar`
+
+Now, on your local maven repository (normally on `<UserFolder>/.m2`) will have a folder called `tracer`. Copy this folder to the `lib` folder on the root of the project with all the contents:
+`microservice\lib\tracer`
+You have to see files on `microservice\lib\tracer\tracer\` and `microservice\lib\tracer\tracer\1.0.0\`.
+
+Next point. Have to edit the root POM and add a local repository:
+```
+    <repositories>
+        <repository>
+            <id>localRepositoryId</id>
+            <name>localRepositoryName</name>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+    </repositories>
+```
+
+We have to add the dependency too:
+```
+        <dependency>
+            <groupId>tracer</groupId>
+            <artifactId>tracer</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+```
+
+The last thing, will be create a configuration `Bean`, so we can inject it where we want.
