@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class OperationsServiceImplTest {
     @InjectMocks
-    OperationsService operationsService = new OperationsServiceImpl();
+    final OperationsService operationsService = new OperationsServiceImpl();
 
     @Mock
     TracerImpl tracer;

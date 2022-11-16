@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 class OperationApiImplTest {
 
     @InjectMocks
-    OperationApi operationApi = new OperationApiImpl();
+    final OperationApi operationApi = new OperationApiImpl();
 
     @Mock
     OperationsService operationsService;

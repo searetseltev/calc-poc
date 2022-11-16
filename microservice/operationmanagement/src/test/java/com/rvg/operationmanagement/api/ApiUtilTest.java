@@ -1,39 +1,50 @@
-package com.rvg.operationmanagement.exceptions;
+package com.rvg.operationmanagement.api;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import java.security.Principal;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Tag("UnitTest")
-@DisplayName("RestResponseEntityExceptionHandlerTest")
+@DisplayName("ApiUtilTest")
 @ExtendWith(MockitoExtension.class)
-class RestResponseEntityExceptionHandlerTest {
+class ApiUtilTest {
 
-    @InjectMocks
-    final RestResponseEntityExceptionHandler restResponseEntityExceptionHandler = new RestResponseEntityExceptionHandler();
-
-    UnknownOperationException unknownOperationException;
-    WebRequest webRequest;
+    private NativeWebRequest nativeWebRequest;
 
     @BeforeEach
-    public void setUp() {
-        unknownOperationException = new UnknownOperationException("test");
-        webRequest = new WebRequest() {
+    void setUp() {
+        nativeWebRequest = new NativeWebRequest() {
+            @Override
+            public Object getNativeRequest() {
+                return null;
+            }
+
+            @Override
+            public Object getNativeResponse() {
+                return null;
+            }
+
+            @Override
+            public <T> T getNativeRequest(Class<T> requiredType) {
+                return null;
+            }
+
+            @Override
+            public <T> T getNativeResponse(Class<T> requiredType) {
+                return null;
+            }
+
             @Override
             public String getHeader(String headerName) {
                 return null;
@@ -76,7 +87,7 @@ class RestResponseEntityExceptionHandlerTest {
 
             @Override
             public String getContextPath() {
-                return "test/path";
+                return null;
             }
 
             @Override
@@ -159,22 +170,12 @@ class RestResponseEntityExceptionHandlerTest {
                 return null;
             }
         };
-
     }
 
 
     @Test
-    void create() {
-        RestResponseEntityExceptionHandler newExceptionHandler = new RestResponseEntityExceptionHandler();
-        assertNotNull(newExceptionHandler);
+    void setExampleResponse() {
+        assertThrows(NullPointerException.class, () -> ApiUtil.setExampleResponse(nativeWebRequest, null, null));
     }
-
-    @Test
-    void handleConflict() {
-        ResponseEntity<Object> result = restResponseEntityExceptionHandler.handleConflict(unknownOperationException, webRequest);
-        assertNotNull(result);
-        assertNotNull(result.getBody());
-        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-    }
-
+    
 }
