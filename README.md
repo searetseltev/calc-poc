@@ -1,14 +1,14 @@
 # calc-poc
 
-## Description
+## :page_facing_up: Description
 This is a proof of concept for a calculator microservice.
 
-## Versions
+## :computer: Versions
 - Spring Boot: 2.7.5
 - Java: 17 (Amazon Corretto v17.0.5)
 - Maven: 3.8.1
 
-## Modules
+## :package: Modules
 ### Discovery Server
 #### Description
 This module will setup a [Netflix Eureka service registry](https://github.com/spring-cloud/spring-cloud-netflix) to register posible future microservices.
@@ -30,10 +30,10 @@ To help testing the API, `swagger-ui` it's linked to the `calc-api.yml` to be co
 
 The rest API has been prepared to calculate certain operations. For now, only can ADD and SUBTRACT, but more operations can be implemented easily.
 
-## Running the project
+## :running: Running the project
 ### Maven
 At the microservice root, realize a `clean install`:
-`mvn clean install`
+```mvn clean install```
 
 This will realize a "clean install" downloading all the dependencies and generating the necessary files on target (including API DTOs and more).
 
@@ -62,24 +62,25 @@ Now, you will have access to same tests:
 - Eureka server status on [localhost:8761](http://localhost:8761/).
 - API documentation and testing on [localhost:8083/swagger-ui/index.html](http://localhost:8083/swagger-ui/index.html).
 
-## Tracer library
+## :book: Tracer library
 At the root POM, there is a dependency for tracer library. It could be dropped at lib folder on project and easily add it giving her route to the project... but at deploy, it's possible that this library has not been copied on the same route. The solution was integrate the lib on a local maven repository. 
 
 ### How to
-We have three files:
+At start, we have three files:
 - tracer-1.0.0.jar
 - tracer-1.0.0-javadoc.jar
 - tracer-1.0.0-sources.jar
 
-Go into the folder where there are these files and execute the next maven command (you can change values for groupId and artifactId):
-`mvn install:install-file -Dfile=.\tracer-1.0.0.jar -DgroupId=tracer -DartifactId=tracer -Dversion=1.0.0 -Dpackaging=jar`
-
-Now, on your local maven repository (normally on `<UserFolder>/.m2`) will have a folder called `tracer`. Copy this folder to the `lib` folder on the root of the project with all the contents:
-`microservice\lib\tracer`
-You have to see files on `microservice\lib\tracer\tracer\` and `microservice\lib\tracer\tracer\1.0.0\`.
-
-Next point. Have to edit the root POM and add a local repository:
-```
+1. Create a `lib` folder at the root of the project: `microservice/lib`.
+1. To install the `jar` for the library, execute this maven command:
+   ```mvn install:install-file -Dfile=<path_to_jar_file>/tracer-1.0.0.jar -DgroupId=io.corp.calculator -DartifactId=tracer -Dversion=1.0.0 -Dpackaging=jar -DcreateChecksum=true```
+1. Now, on your local maven repository (normally on `<UserFolder>/.m2`) will have a folder called `.m2/io/corp/calculator/tracer/1.0.0`.
+1. We need to recreate this tree folder at the `lib` folder of the project: `microservice/lib/io/corp/calculator/tracer/1.0.0`.
+1. Copy files `maven-metadata-local.xml`, `maven-metadata-local.xml.md5` and `maven-metadata-local.xml.sha1` from `.m2/io/corp/calculator/tracer` to `microservice/lib/io/corp/calculator/tracer` and rename them to `maven-metadata.xml`, `maven-metadata.xml.md5` and `maven-metadata.xml.sha1`.
+1. Copy all files from `.m2/io/corp/calculator/tracer` to `microservice/lib/io/corp/calculator/tracer/1.0.0`.
+1. Copy `tracer-1.0.0-javadoc.jar` and `tracer-1.0.0-sources.jar` to `microservice/lib/io/corp/calculator/tracer/1.0.0`.
+1. Edit the root POM and add a local repository (name is irrelevant):
+   ```
     <repositories>
         <repository>
             <id>localRepositoryId</id>
@@ -87,15 +88,24 @@ Next point. Have to edit the root POM and add a local repository:
             <url>file://${project.basedir}/lib</url>
         </repository>
     </repositories>
-```
-
-We have to add the dependency too:
-```
+   ```
+1. Add the dependency to the root POM too:
+   ```
         <dependency>
-            <groupId>tracer</groupId>
+            <groupId>io.corp.calculator</groupId>
             <artifactId>tracer</artifactId>
             <version>1.0.0</version>
         </dependency>
-```
-
-The last thing, will be create a configuration `Bean`, so we can inject it where we want.
+   ```
+1. If you want to force download all the sources and java doc, you can use this command:
+   ```mvn dependency:sources dependency:resolve -Dclassifier=javadoc```
+1. The last thing, will be create a configuration `Bean`, so we can inject it where we want:
+   ```
+   @Configuration
+   public class TracerConfiguration {
+     @Bean
+     public TracerImpl getTracerImpl() {
+        return new TracerImpl();
+     }
+   }
+   ```
