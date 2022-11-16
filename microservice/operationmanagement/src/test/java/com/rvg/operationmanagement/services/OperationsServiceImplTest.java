@@ -4,6 +4,7 @@ import com.rvg.operationmanagement.domain.enums.OperationsEnum;
 import com.rvg.operationmanagement.domain.model.OperationRequest;
 import com.rvg.operationmanagement.domain.model.OperationResult;
 import com.rvg.operationmanagement.domain.services.OperationsService;
+import com.rvg.operationmanagement.exceptions.BadOperandsException;
 import com.rvg.operationmanagement.exceptions.UnknownOperationException;
 import io.corp.calculator.TracerImpl;
 import org.junit.jupiter.api.DisplayName;
@@ -59,5 +60,16 @@ class OperationsServiceImplTest {
     void calculate_unknown() {
         OperationRequest operationRequest = new OperationRequest(OperationsEnum.UNKNOWN, FIRST_OPERAND, SECOND_OPERAND);
         assertThrows(UnknownOperationException.class, () -> operationsService.calculate(operationRequest));
+    }
+
+    @Test
+    void calculate_badOperands() {
+        OperationRequest operationRequest1 = new OperationRequest(OperationsEnum.ADD, null, null);
+        OperationRequest operationRequest2 = new OperationRequest(OperationsEnum.ADD, FIRST_OPERAND, null);
+        OperationRequest operationRequest3 = new OperationRequest(OperationsEnum.ADD, null, SECOND_OPERAND);
+
+        assertThrows(BadOperandsException.class, () -> operationsService.calculate(operationRequest1));
+        assertThrows(BadOperandsException.class, () -> operationsService.calculate(operationRequest2));
+        assertThrows(BadOperandsException.class, () -> operationsService.calculate(operationRequest3));
     }
 }

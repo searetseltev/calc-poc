@@ -77,7 +77,7 @@ class OperationResquestMapperTest {
         OperationRequest operationRequest = operationRequestMapper.toOperationRequest(operationRequestDTO);
         assertNotNull(operationRequest);
         assertEquals(OperationsEnum.ADD, operationRequest.getOperation());
-        assertEquals(BigDecimal.ZERO, operationRequest.getFirstOperand());
+        assertNull(operationRequest.getFirstOperand());
         assertEquals(BigDecimal.ONE, operationRequest.getSecondOperand());
     }
 
@@ -89,7 +89,7 @@ class OperationResquestMapperTest {
         assertNotNull(operationRequest);
         assertEquals(OperationsEnum.ADD, operationRequest.getOperation());
         assertEquals(BigDecimal.ONE, operationRequest.getFirstOperand());
-        assertEquals(BigDecimal.ZERO, operationRequest.getSecondOperand());
+        assertNull(operationRequest.getSecondOperand());
     }
 
     @Test
@@ -110,12 +110,4 @@ class OperationResquestMapperTest {
         assertEquals(OperationsEnum.UNKNOWN, unknown);
     }
 
-    @Test
-    void toBigDecimal() {
-        BigDecimal bigDecimal = operationRequestMapper.toBigDecimal(BigDecimal.ONE);
-        assertEquals(BigDecimal.ONE, bigDecimal);
-
-        BigDecimal bigDecimalNull = operationRequestMapper.toBigDecimal(null);
-        assertEquals(BigDecimal.ZERO, bigDecimalNull);
-    }
 }

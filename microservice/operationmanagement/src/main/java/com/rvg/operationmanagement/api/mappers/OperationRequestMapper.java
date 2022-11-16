@@ -9,14 +9,10 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.util.ObjectUtils;
 
-import java.math.BigDecimal;
-
 @Mapper(componentModel = "spring")
 public interface OperationRequestMapper {
 
     @Mapping(source = "operation", target = "operation", qualifiedByName = "mapOperation")
-    @Mapping(source = "firstOperand", target = "firstOperand", qualifiedByName = "mapBigDecimal")
-    @Mapping(source = "secondOperand", target = "secondOperand", qualifiedByName = "mapBigDecimal")
     OperationRequest toOperationRequest(OperationRequestDTO operationRequestDTO);
 
     @Named("mapOperation")
@@ -26,10 +22,4 @@ public interface OperationRequestMapper {
         }
         return OperationsEnum.UNKNOWN;
     }
-
-    @Named("mapBigDecimal")
-    default BigDecimal toBigDecimal(BigDecimal operand) {
-        return operand != null ? operand : BigDecimal.ZERO;
-    }
-
 }

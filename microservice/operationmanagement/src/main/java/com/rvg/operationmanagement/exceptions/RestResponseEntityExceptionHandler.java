@@ -18,12 +18,12 @@ import java.util.Calendar;
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = { UnknownOperationException.class })
+    @ExceptionHandler(value = { UnknownOperationException.class, BadOperandsException.class })
     protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
         ApiErrorDTO apiErrorDTO = new ApiErrorDTO();
         apiErrorDTO.setTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()).toString());
         apiErrorDTO.setStatus(HttpStatus.BAD_REQUEST.value());
-        apiErrorDTO.setError("Unknown operation");
+        apiErrorDTO.setError("Bad Request");
         apiErrorDTO.setPath(request.getContextPath());
         apiErrorDTO.setMessage(ex.getMessage());
 
