@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Tag("UnitTest")
-@DisplayName("OperationResquestMapperTest")
+@DisplayName("TracerConfigurationTest")
 @ExtendWith(MockitoExtension.class)
 class TracerConfigurationTest {
     @InjectMocks
