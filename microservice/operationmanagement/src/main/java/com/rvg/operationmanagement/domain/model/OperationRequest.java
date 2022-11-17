@@ -6,12 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class OperationRequest {
     private OperationsEnum operation;
-    private BigDecimal firstOperand;
-    private BigDecimal secondOperand;
+    private List<BigDecimal> values;
 }

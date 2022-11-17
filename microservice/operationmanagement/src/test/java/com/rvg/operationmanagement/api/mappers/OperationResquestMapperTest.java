@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,13 +26,18 @@ class OperationResquestMapperTest {
     final OperationRequestMapper operationRequestMapper = new OperationRequestMapperImpl();
 
     private OperationRequestDTO operationRequestDTO;
+    private List<BigDecimal> values;
 
     @BeforeEach
     public void setUp() {
+        values = new ArrayList<>();
+        values.add(BigDecimal.ONE);
+        values.add(BigDecimal.TEN);
+        values.add(BigDecimal.valueOf(100L));
+
         operationRequestDTO = new OperationRequestDTO();
         operationRequestDTO.setOperation(OperationTypeDTO.ADD);
-        operationRequestDTO.setFirstOperand(BigDecimal.ONE);
-        operationRequestDTO.setSecondOperand(BigDecimal.ONE);
+        operationRequestDTO.setValues(values);
     }
 
     @Test
@@ -44,8 +51,7 @@ class OperationResquestMapperTest {
         OperationRequest operationRequest = operationRequestMapper.toOperationRequest(operationRequestDTO);
         assertNotNull(operationRequest);
         assertEquals(OperationsEnum.ADD, operationRequest.getOperation());
-        assertEquals(BigDecimal.ONE, operationRequest.getFirstOperand());
-        assertEquals(BigDecimal.ONE, operationRequest.getSecondOperand());
+        assertEquals(values.size(), operationRequest.getValues().size());
     }
 
     @Test
@@ -55,8 +61,17 @@ class OperationResquestMapperTest {
         OperationRequest operationRequest = operationRequestMapper.toOperationRequest(operationRequestDTO);
         assertNotNull(operationRequest);
         assertEquals(OperationsEnum.SUBTRACT, operationRequest.getOperation());
-        assertEquals(BigDecimal.ONE, operationRequest.getFirstOperand());
-        assertEquals(BigDecimal.ONE, operationRequest.getSecondOperand());
+        assertEquals(values.size(), operationRequest.getValues().size());
+    }
+
+    @Test
+    void  toOperationRequest_BiggerAndLower() {
+        operationRequestDTO.setOperation(OperationTypeDTO.BIGGER_AND_LOWER);
+
+        OperationRequest operationRequest = operationRequestMapper.toOperationRequest(operationRequestDTO);
+        assertNotNull(operationRequest);
+        assertEquals(OperationsEnum.BIGGER_AND_LOWER, operationRequest.getOperation());
+        assertEquals(values.size(), operationRequest.getValues().size());
     }
 
     @Test
@@ -66,30 +81,19 @@ class OperationResquestMapperTest {
         OperationRequest operationRequest = operationRequestMapper.toOperationRequest(operationRequestDTO);
         assertNotNull(operationRequest);
         assertEquals(OperationsEnum.UNKNOWN, operationRequest.getOperation());
-        assertEquals(BigDecimal.ONE, operationRequest.getFirstOperand());
-        assertEquals(BigDecimal.ONE, operationRequest.getSecondOperand());
+        assertEquals(values.size(), operationRequest.getValues().size());
     }
 
+
+
     @Test
-    void toOperationRequest_noFirstOperand() {
-        operationRequestDTO.setFirstOperand(null);
+    void toOperationRequest_nullValues() {
+        operationRequestDTO.setValues(null);
 
         OperationRequest operationRequest = operationRequestMapper.toOperationRequest(operationRequestDTO);
         assertNotNull(operationRequest);
         assertEquals(OperationsEnum.ADD, operationRequest.getOperation());
-        assertNull(operationRequest.getFirstOperand());
-        assertEquals(BigDecimal.ONE, operationRequest.getSecondOperand());
-    }
-
-    @Test
-    void toOperationRequest_noSecondOperand() {
-        operationRequestDTO.setSecondOperand(null);
-
-        OperationRequest operationRequest = operationRequestMapper.toOperationRequest(operationRequestDTO);
-        assertNotNull(operationRequest);
-        assertEquals(OperationsEnum.ADD, operationRequest.getOperation());
-        assertEquals(BigDecimal.ONE, operationRequest.getFirstOperand());
-        assertNull(operationRequest.getSecondOperand());
+        assertNull(operationRequest.getValues());
     }
 
     @Test
@@ -105,6 +109,9 @@ class OperationResquestMapperTest {
 
         OperationsEnum subtract = operationRequestMapper.toOperationsEnum(OperationTypeDTO.SUBTRACT);
         assertEquals(OperationsEnum.SUBTRACT, subtract);
+
+        OperationsEnum biggerAndLower = operationRequestMapper.toOperationsEnum(OperationTypeDTO.BIGGER_AND_LOWER);
+        assertEquals(OperationsEnum.BIGGER_AND_LOWER, biggerAndLower);
 
         OperationsEnum unknown = operationRequestMapper.toOperationsEnum(null);
         assertEquals(OperationsEnum.UNKNOWN, unknown);
