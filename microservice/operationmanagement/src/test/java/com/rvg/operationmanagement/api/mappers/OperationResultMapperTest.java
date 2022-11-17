@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,8 +27,9 @@ class OperationResultMapperTest {
 
     @BeforeEach
     public void setUp() {
+        List<BigDecimal> results = Arrays.asList(new BigDecimal(10), new BigDecimal(5));
         operationResult = new OperationResult();
-        operationResult.setResult(BigDecimal.ONE);
+        operationResult.setResults(results);
     }
 
     @Test
@@ -39,7 +42,7 @@ class OperationResultMapperTest {
     void toOperationResultDTO() {
         OperationResultDTO operationResultDTO = operationResultMapper.toOperationResultDTO(operationResult);
         assertNotNull(operationResultDTO);
-        assertEquals(BigDecimal.ONE, operationResultDTO.getResult());
+        assertEquals(new BigDecimal(5), operationResultDTO.getResults().get(1));
     }
 
     @Test

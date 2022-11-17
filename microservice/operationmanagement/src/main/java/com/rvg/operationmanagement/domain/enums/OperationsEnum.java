@@ -9,6 +9,9 @@ public enum OperationsEnum {
     @JsonProperty("subtract")
     SUBTRACT,
 
+    @JsonProperty("bigger_and_lower")
+    BIGGER_AND_LOWER,
+
     @JsonProperty("unknown")
     UNKNOWN
 }
