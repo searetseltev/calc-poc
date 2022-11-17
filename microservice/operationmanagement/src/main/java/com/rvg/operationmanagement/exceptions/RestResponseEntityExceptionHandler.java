@@ -2,7 +2,9 @@ package com.rvg.operationmanagement.exceptions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rvg.operationmanagement.api.model.ApiErrorDTO;
+import io.corp.calculator.TracerImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,9 @@ import java.util.Calendar;
 @Slf4j
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @Autowired
+    TracerImpl tracer;
 
     @ExceptionHandler(value = { UnknownOperationException.class, BadOperandsException.class })
     protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
@@ -33,6 +38,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         } catch (Exception e) {
             log.info("Error while parsing exception to JSON", e);
         }
+
+        tracer.trace(apiErrorDTO.getError() + ": " + apiErrorDTO.getMessage());
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }
