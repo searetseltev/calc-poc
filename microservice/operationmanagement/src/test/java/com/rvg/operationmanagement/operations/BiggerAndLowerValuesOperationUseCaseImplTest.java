@@ -1,7 +1,7 @@
 package com.rvg.operationmanagement.operations;
 
 import com.rvg.operationmanagement.domain.model.OperationResult;
-import com.rvg.operationmanagement.domain.operations.BiggerAndLowerValuesOperationUseCase;
+import com.rvg.operationmanagement.domain.operations.OperationUseCase;
 import com.rvg.operationmanagement.exceptions.BadOperandsException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class BiggerAndLowerValuesOperationUseCaseImplTest {
     @InjectMocks
-    final BiggerAndLowerValuesOperationUseCase biggerAndLowerValuesOperationUseCase = new BiggerAndLowerValuesOperationUseCaseImpl();
+    final OperationUseCase biggerAndLowerValuesOperationUseCase = new BiggerAndLowerValuesOperationUseCaseImpl();
 
     private static final BigDecimal FIRST_OPERAND = new BigDecimal(10);
     private static final BigDecimal SECOND_OPERAND = new BigDecimal(5);
@@ -36,7 +36,7 @@ class BiggerAndLowerValuesOperationUseCaseImplTest {
     private final List<BigDecimal> valuesWithNulls = Arrays.asList(FIRST_OPERAND, null, THIRD_OPERAND);
     @Test
     void create() {
-        BiggerAndLowerValuesOperationUseCase newUseCase = new BiggerAndLowerValuesOperationUseCaseImpl();
+        OperationUseCase newUseCase = new BiggerAndLowerValuesOperationUseCaseImpl();
         assertNotNull(newUseCase);
     }
 

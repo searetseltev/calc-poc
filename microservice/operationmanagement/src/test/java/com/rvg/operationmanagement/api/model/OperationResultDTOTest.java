@@ -42,8 +42,12 @@ class OperationResultDTOTest {
         assertNotNull(operationResultDTO);
 
         operationResultDTO.results(values);
-
         assertEquals(values.get(0), operationResultDTO.getResults().get(0));
+
+        operationResultDTO.setResults(null);
+        operationResultDTO.addResultsItem(NUMBER);
+        assertNotNull(operationResultDTO.getResults());
+        assertEquals(NUMBER, operationResultDTO.getResults().get(0));
     }
 
     @Test
@@ -63,6 +67,7 @@ class OperationResultDTOTest {
         operationResultDTO2.setResults(null);
         assertNotEquals(operationResultDTO1, operationResultDTO2);
 
+        assertNotEquals(operationResultDTO2, null);
         assertNotEquals(null, operationResultDTO2);
     }
 
@@ -71,11 +76,16 @@ class OperationResultDTOTest {
         OperationResultDTO operationResultDTO = new OperationResultDTO();
         assertNotNull(operationResultDTO);
 
+        operationResultDTO.setResults(values);
+        String toString1 = operationResultDTO.toString();
+        assertNotNull(toString1);
+        assertFalse(toString1.isEmpty());
+
         operationResultDTO.setResults(null);
 
-        String toString = operationResultDTO.toString();
-        assertNotNull(toString);
-        assertTrue(toString.contains("null"));
+        String toString2 = operationResultDTO.toString();
+        assertNotNull(toString2);
+        assertTrue(toString2.contains("null"));
 
     }
 

@@ -73,11 +73,13 @@ class ApiErrorDTOTest {
         apiErrorDTO2.setStatus(1);
         apiErrorDTO2.setTimestamp(TEXT);
 
+        assertEquals(apiErrorDTO1, apiErrorDTO1);
         assertEquals(apiErrorDTO1, apiErrorDTO2);
         assertEquals(apiErrorDTO1.hashCode(), apiErrorDTO2.hashCode());
 
         apiErrorDTO2.setError(null);
         assertNotEquals(apiErrorDTO1, apiErrorDTO2);
+        assertNotEquals(apiErrorDTO2, null);
 
         assertNotEquals(null, apiErrorDTO2);
     }

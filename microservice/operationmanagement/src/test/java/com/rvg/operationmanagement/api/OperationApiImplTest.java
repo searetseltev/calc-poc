@@ -4,8 +4,6 @@ import com.rvg.operationmanagement.api.mappers.OperationRequestMapper;
 import com.rvg.operationmanagement.api.mappers.OperationResultMapper;
 import com.rvg.operationmanagement.api.model.OperationRequestDTO;
 import com.rvg.operationmanagement.api.model.OperationResultDTO;
-import com.rvg.operationmanagement.api.model.OperationTypeDTO;
-import com.rvg.operationmanagement.domain.enums.OperationsEnum;
 import com.rvg.operationmanagement.domain.model.OperationRequest;
 import com.rvg.operationmanagement.domain.model.OperationResult;
 import com.rvg.operationmanagement.domain.services.OperationsService;
@@ -46,6 +44,8 @@ class OperationApiImplTest {
     @Mock
     OperationResultMapper operationResultMapper;
 
+    private final static String ADD = "add";
+
     private OperationRequest operationRequest;
     private OperationRequestDTO operationRequestDTO;
     private OperationResult operationResult;
@@ -57,11 +57,11 @@ class OperationApiImplTest {
         List<BigDecimal> results = Collections.singletonList(BigDecimal.valueOf(111L));
 
         operationRequest = new OperationRequest();
-        operationRequest.setOperation(OperationsEnum.ADD);
+        operationRequest.setOperation(ADD);
         operationRequest.setValues(values);
 
         operationRequestDTO = new OperationRequestDTO();
-        operationRequestDTO.setOperation(OperationTypeDTO.ADD);
+        operationRequestDTO.setOperation(ADD);
         operationRequestDTO.setValues(values);
 
         operationResult = new OperationResult();

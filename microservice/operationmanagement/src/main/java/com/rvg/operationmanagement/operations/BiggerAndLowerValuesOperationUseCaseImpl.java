@@ -1,7 +1,7 @@
 package com.rvg.operationmanagement.operations;
 
 import com.rvg.operationmanagement.domain.model.OperationResult;
-import com.rvg.operationmanagement.domain.operations.BiggerAndLowerValuesOperationUseCase;
+import com.rvg.operationmanagement.domain.operations.OperationUseCase;
 import com.rvg.operationmanagement.exceptions.BadOperandsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -11,17 +11,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Remember to add the component name to the Api description to inform to the clients.
+ */
 @Slf4j
-@Component
-public class BiggerAndLowerValuesOperationUseCaseImpl implements BiggerAndLowerValuesOperationUseCase {
+@Component("bigger_and_lower")
+public class BiggerAndLowerValuesOperationUseCaseImpl implements OperationUseCase {
 
     @Override
     public OperationResult calculate(List<BigDecimal> values) throws BadOperandsException {
         log.info("calculate({})", values);
 
-        if (!operationHasOperandsValid(values)) {
-            throw new BadOperandsException("Operands are not valid");
-        }
+        validateValues(values);
 
         Optional<BigDecimal> bigger = values.stream().max(BigDecimal::compareTo);
         Optional<BigDecimal> lower = values.stream().min(BigDecimal::compareTo);
@@ -34,7 +35,9 @@ public class BiggerAndLowerValuesOperationUseCaseImpl implements BiggerAndLowerV
         return new OperationResult(Arrays.asList(bigger.get(), lower.get()));
     }
 
-    private boolean operationHasOperandsValid(List<BigDecimal> values) {
-        return values != null && !values.contains(null) && values.size() >= 2;
+    private void validateValues(List<BigDecimal> values) {
+        if (values == null || values.contains(null) || values.size() < 2) {
+            throw new BadOperandsException("Operands are not valid");
+        }
     }
 }
