@@ -29,8 +29,9 @@ For this module, there is a `yaml` file on `src/main/resources/static/calc-api.y
 To help testing the API, `swagger-ui` it's linked to the `calc-api.yml` to be consistent with the actual build.
 
 The rest API has been prepared to calculate certain operations but it's prepared to create more options. The operation request, can receive multiple values to do the operation and can return multiple values too. Originally, the request is only to implement ADD and SUBTRACT... but at the future, it's posible have to implement quadratic equations (returning two results) or operations with a limited number of elements (as calculate Fibonacci serie giving a top limit). 
-On the implementation there is an usecase component for every operation and them will be called from the operations service.
-As proof of concept, there is an operation called `bigger_and_lower`, that returns two values, the bigger of the list and the lower one.
+On the implementation there is an usecase component for every operation implementing the `OperationUseCase` interface and them will be called from the `OperationsService` implementation using a `Map` of named `Beans`.
+As proof of concept, there is an operation called `bigger_and_lower`, that returns two values, the bigger of the list and the lower one. 
+For every new operation, it's only needed to create a new implementation of the `OperationUseCase` interface and give a name to the `Component` (it's recommended to update the API description to inform to the clients that there is a new operation). The new operation will be automatically detected by the service without modify any code.
 
 ## :running: Running the project
 ### Maven
@@ -45,7 +46,7 @@ Now, you can execute the modules in order:
 - With the two servers up, go into the operationmanagement path and execute: `mvn spring-boot:run`
 
 You can see the Eureka server status opening [localhost:8761](http://localhost:8761/).
-You can access the API documentation going to [localhost:8083/swagger-ui/index.html](http://localhost:8083/swagger-ui/index.html) try the request for `/operation` or use some software as Postman to make a `POST` request to `localhost:8083/operation` with a body similar to this:
+You can access the API documentation going to [localhost:8083/swagger-ui/index.html](http://localhost:8083/swagger-ui/index.html) try the request for `/operation` or use some software like Postman to make a `POST` request to `localhost:8083/operation` with a body similar to this:
 ```
 {
   "values": [1234.5678, 1234.5678], 
