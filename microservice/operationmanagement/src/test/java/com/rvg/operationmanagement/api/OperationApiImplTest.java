@@ -4,8 +4,6 @@ import com.rvg.operationmanagement.api.mappers.OperationRequestMapper;
 import com.rvg.operationmanagement.api.mappers.OperationResultMapper;
 import com.rvg.operationmanagement.api.model.OperationRequestDTO;
 import com.rvg.operationmanagement.api.model.OperationResultDTO;
-import com.rvg.operationmanagement.api.model.OperationTypeDTO;
-import com.rvg.operationmanagement.domain.enums.OperationsEnum;
 import com.rvg.operationmanagement.domain.model.OperationRequest;
 import com.rvg.operationmanagement.domain.model.OperationResult;
 import com.rvg.operationmanagement.domain.services.OperationsService;
@@ -21,6 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -43,6 +44,8 @@ class OperationApiImplTest {
     @Mock
     OperationResultMapper operationResultMapper;
 
+    private final static String ADD = "add";
+
     private OperationRequest operationRequest;
     private OperationRequestDTO operationRequestDTO;
     private OperationResult operationResult;
@@ -50,21 +53,22 @@ class OperationApiImplTest {
 
     @BeforeEach
     public void setUp() {
+        List<BigDecimal> values = Arrays.asList(BigDecimal.ONE, BigDecimal.TEN, BigDecimal.valueOf(100L));
+        List<BigDecimal> results = Collections.singletonList(BigDecimal.valueOf(111L));
+
         operationRequest = new OperationRequest();
-        operationRequest.setOperation(OperationsEnum.ADD);
-        operationRequest.setFirstOperand(BigDecimal.ONE);
-        operationRequest.setSecondOperand(BigDecimal.ONE);
+        operationRequest.setOperation(ADD);
+        operationRequest.setValues(values);
 
         operationRequestDTO = new OperationRequestDTO();
-        operationRequestDTO.setOperation(OperationTypeDTO.ADD);
-        operationRequestDTO.setFirstOperand(BigDecimal.ONE);
-        operationRequestDTO.setSecondOperand(BigDecimal.ONE);
+        operationRequestDTO.setOperation(ADD);
+        operationRequestDTO.setValues(values);
 
         operationResult = new OperationResult();
-        operationResult.setResult(new BigDecimal(2));
+        operationResult.setResults(results);
 
         operationResultDTO = new OperationResultDTO();
-        operationResultDTO.setResult(new BigDecimal(2));
+        operationResultDTO.setResults(results);
     }
 
     @Test
@@ -84,6 +88,6 @@ class OperationApiImplTest {
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
         assertEquals(operationResultDTO, result.getBody());
-        assertEquals(operationResultDTO.getResult(), result.getBody().getResult());
+        assertEquals(operationResultDTO.getResults().get(0), result.getBody().getResults().get(0));
     }
 }

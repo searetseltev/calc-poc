@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class OperationResultDTOTest {
 
     private static final BigDecimal NUMBER = BigDecimal.ONE;
+    private final List<BigDecimal> values = Arrays.asList(NUMBER, NUMBER);
 
     @Test
     void create() {
@@ -28,9 +31,9 @@ class OperationResultDTOTest {
         OperationResultDTO operationResultDTO = new OperationResultDTO();
         assertNotNull(operationResultDTO);
 
-        operationResultDTO.setResult(NUMBER);
+        operationResultDTO.setResults(values);
 
-        assertEquals(NUMBER, operationResultDTO.getResult());
+        assertEquals(values.get(0), operationResultDTO.getResults().get(0));
     }
 
     @Test
@@ -38,9 +41,13 @@ class OperationResultDTOTest {
         OperationResultDTO operationResultDTO = new OperationResultDTO();
         assertNotNull(operationResultDTO);
 
-        operationResultDTO.result(NUMBER);
+        operationResultDTO.results(values);
+        assertEquals(values.get(0), operationResultDTO.getResults().get(0));
 
-        assertEquals(NUMBER, operationResultDTO.getResult());
+        operationResultDTO.setResults(null);
+        operationResultDTO.addResultsItem(NUMBER);
+        assertNotNull(operationResultDTO.getResults());
+        assertEquals(NUMBER, operationResultDTO.getResults().get(0));
     }
 
     @Test
@@ -51,15 +58,16 @@ class OperationResultDTOTest {
         OperationResultDTO operationResultDTO2 = new OperationResultDTO();
         assertNotNull(operationResultDTO2);
 
-        operationResultDTO1.setResult(NUMBER);
-        operationResultDTO2.setResult(NUMBER);
+        operationResultDTO1.setResults(values);
+        operationResultDTO2.setResults(values);
 
         assertEquals(operationResultDTO1, operationResultDTO2);
         assertEquals(operationResultDTO1.hashCode(), operationResultDTO2.hashCode());
 
-        operationResultDTO2.setResult(null);
+        operationResultDTO2.setResults(null);
         assertNotEquals(operationResultDTO1, operationResultDTO2);
 
+        assertNotEquals(operationResultDTO2, null);
         assertNotEquals(null, operationResultDTO2);
     }
 
@@ -68,11 +76,16 @@ class OperationResultDTOTest {
         OperationResultDTO operationResultDTO = new OperationResultDTO();
         assertNotNull(operationResultDTO);
 
-        operationResultDTO.setResult(null);
+        operationResultDTO.setResults(values);
+        String toString1 = operationResultDTO.toString();
+        assertNotNull(toString1);
+        assertFalse(toString1.isEmpty());
 
-        String toString = operationResultDTO.toString();
-        assertNotNull(toString);
-        assertTrue(toString.contains("null"));
+        operationResultDTO.setResults(null);
+
+        String toString2 = operationResultDTO.toString();
+        assertNotNull(toString2);
+        assertTrue(toString2.contains("null"));
 
     }
 
