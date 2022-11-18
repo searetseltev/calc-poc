@@ -1,12 +1,10 @@
 package com.rvg.operationmanagement.services;
 
-import com.rvg.operationmanagement.domain.enums.OperationsEnum;
 import com.rvg.operationmanagement.domain.model.OperationRequest;
 import com.rvg.operationmanagement.domain.model.OperationResult;
-import com.rvg.operationmanagement.domain.operations.AddOperationUseCase;
-import com.rvg.operationmanagement.domain.operations.BiggerAndLowerValuesOperationUseCase;
-import com.rvg.operationmanagement.domain.operations.SubtractOperationUseCase;
+import com.rvg.operationmanagement.domain.operations.OperationUseCase;
 import com.rvg.operationmanagement.domain.services.OperationsService;
+import com.rvg.operationmanagement.exceptions.BadOperandsException;
 import com.rvg.operationmanagement.exceptions.UnknownOperationException;
 import io.corp.calculator.TracerImpl;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -33,17 +32,18 @@ class OperationsServiceImplTest {
     final OperationsService operationsService = new OperationsServiceImpl();
 
     @Mock
-    AddOperationUseCase addOperationUseCase;
+    Map<String, OperationUseCase> operations;
 
     @Mock
-    SubtractOperationUseCase subtractOperationUseCase;
-
-    @Mock
-    BiggerAndLowerValuesOperationUseCase biggerAndLowerValuesOperationUseCase;
+    OperationUseCase operationUseCase;
 
     @Mock
     TracerImpl tracer;
 
+    private static final String ADD = "add";
+    private static final String SUBTRACT = "subtract";
+    private static final String BIGGER_AND_LOWER = "bigger_and_lower";
+    private static final String UNKNOWN = "unknown_operation";
     private static final BigDecimal FIRST_OPERAND = new BigDecimal(10);
     private static final BigDecimal SECOND_OPERAND = new BigDecimal(5);
     private static final BigDecimal THIRD_OPERAND = new BigDecimal(2);
@@ -62,9 +62,11 @@ class OperationsServiceImplTest {
 
     @Test
     void calculate_add() {
-        when(addOperationUseCase.calculate(values)).thenReturn(new OperationResult(Collections.singletonList(ADD_RESULT)));
+        when(operations.containsKey(ADD)).thenReturn(true);
+        when(operations.get(ADD)).thenReturn(operationUseCase);
+        when(operationUseCase.calculate(values)).thenReturn(new OperationResult(Collections.singletonList(ADD_RESULT)));
 
-        OperationRequest operationRequest = new OperationRequest(OperationsEnum.ADD, values);
+        OperationRequest operationRequest = new OperationRequest(ADD, values);
         OperationResult result = operationsService.calculate(operationRequest);
         assertNotNull(result);
         assertEquals(ADD_RESULT, result.getResults().get(0));
@@ -72,9 +74,11 @@ class OperationsServiceImplTest {
 
     @Test
     void calculate_subtract() {
-        when(subtractOperationUseCase.calculate(values)).thenReturn(new OperationResult(Collections.singletonList(SUBTRACT_RESULT)));
+        when(operations.containsKey(SUBTRACT)).thenReturn(true);
+        when(operations.get(SUBTRACT)).thenReturn(operationUseCase);
+        when(operationUseCase.calculate(values)).thenReturn(new OperationResult(Collections.singletonList(SUBTRACT_RESULT)));
 
-        OperationRequest operationRequest = new OperationRequest(OperationsEnum.SUBTRACT, values);
+        OperationRequest operationRequest = new OperationRequest(SUBTRACT, values);
         OperationResult result = operationsService.calculate(operationRequest);
         assertNotNull(result);
         assertEquals(SUBTRACT_RESULT, result.getResults().get(0));
@@ -82,9 +86,11 @@ class OperationsServiceImplTest {
 
     @Test
     void calculate_biggerAndLower() {
-        when(biggerAndLowerValuesOperationUseCase.calculate(valuesWithThreeOperands)).thenReturn(new OperationResult(BIGGER_AND_LOWER_RESULT));
+        when(operations.containsKey(BIGGER_AND_LOWER)).thenReturn(true);
+        when(operations.get(BIGGER_AND_LOWER)).thenReturn(operationUseCase);
+        when(operationUseCase.calculate(valuesWithThreeOperands)).thenReturn(new OperationResult(BIGGER_AND_LOWER_RESULT));
 
-        OperationRequest operationRequest = new OperationRequest(OperationsEnum.BIGGER_AND_LOWER, valuesWithThreeOperands);
+        OperationRequest operationRequest = new OperationRequest(BIGGER_AND_LOWER, valuesWithThreeOperands);
         OperationResult result = operationsService.calculate(operationRequest);
         assertNotNull(result);
         assertEquals(BIGGER_AND_LOWER_RESULT.get(0), result.getResults().get(0));
@@ -92,8 +98,18 @@ class OperationsServiceImplTest {
     }
 
     @Test
+    void calculate_nullValues() {
+        when(operations.containsKey(UNKNOWN)).thenReturn(true);
+
+        OperationRequest operationRequest = new OperationRequest(UNKNOWN, null);
+        assertThrows(BadOperandsException.class, () -> operationsService.calculate(operationRequest));
+    }
+
+    @Test
     void calculate_unknown() {
-        OperationRequest operationRequest = new OperationRequest(OperationsEnum.UNKNOWN, values);
+        when(operations.containsKey(UNKNOWN)).thenReturn(false);
+
+        OperationRequest operationRequest = new OperationRequest(UNKNOWN, values);
         assertThrows(UnknownOperationException.class, () -> operationsService.calculate(operationRequest));
     }
 

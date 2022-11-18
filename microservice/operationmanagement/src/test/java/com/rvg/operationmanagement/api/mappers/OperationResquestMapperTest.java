@@ -1,8 +1,6 @@
 package com.rvg.operationmanagement.api.mappers;
 
 import com.rvg.operationmanagement.api.model.OperationRequestDTO;
-import com.rvg.operationmanagement.api.model.OperationTypeDTO;
-import com.rvg.operationmanagement.domain.enums.OperationsEnum;
 import com.rvg.operationmanagement.domain.model.OperationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +23,10 @@ class OperationResquestMapperTest {
     @InjectMocks
     final OperationRequestMapper operationRequestMapper = new OperationRequestMapperImpl();
 
+    private static final String ADD = "ADD";
+    private static final String SUBTRACT = "SUBTRACT";
+    private static final String BIGGER_AND_LOWER = "BIGGER_AND_LOWER";
+
     private OperationRequestDTO operationRequestDTO;
     private List<BigDecimal> values;
 
@@ -36,7 +38,7 @@ class OperationResquestMapperTest {
         values.add(BigDecimal.valueOf(100L));
 
         operationRequestDTO = new OperationRequestDTO();
-        operationRequestDTO.setOperation(OperationTypeDTO.ADD);
+        operationRequestDTO.setOperation(ADD);
         operationRequestDTO.setValues(values);
     }
 
@@ -47,44 +49,12 @@ class OperationResquestMapperTest {
     }
 
     @Test
-    void toOperationRequest_add() {
+    void toOperationRequest() {
         OperationRequest operationRequest = operationRequestMapper.toOperationRequest(operationRequestDTO);
         assertNotNull(operationRequest);
-        assertEquals(OperationsEnum.ADD, operationRequest.getOperation());
+        assertEquals(ADD, operationRequest.getOperation());
         assertEquals(values.size(), operationRequest.getValues().size());
     }
-
-    @Test
-    void toOperationRequest_subtract() {
-        operationRequestDTO.setOperation(OperationTypeDTO.SUBTRACT);
-
-        OperationRequest operationRequest = operationRequestMapper.toOperationRequest(operationRequestDTO);
-        assertNotNull(operationRequest);
-        assertEquals(OperationsEnum.SUBTRACT, operationRequest.getOperation());
-        assertEquals(values.size(), operationRequest.getValues().size());
-    }
-
-    @Test
-    void  toOperationRequest_BiggerAndLower() {
-        operationRequestDTO.setOperation(OperationTypeDTO.BIGGER_AND_LOWER);
-
-        OperationRequest operationRequest = operationRequestMapper.toOperationRequest(operationRequestDTO);
-        assertNotNull(operationRequest);
-        assertEquals(OperationsEnum.BIGGER_AND_LOWER, operationRequest.getOperation());
-        assertEquals(values.size(), operationRequest.getValues().size());
-    }
-
-    @Test
-    void toOperationRequest_unknown() {
-        operationRequestDTO.setOperation(null);
-
-        OperationRequest operationRequest = operationRequestMapper.toOperationRequest(operationRequestDTO);
-        assertNotNull(operationRequest);
-        assertEquals(OperationsEnum.UNKNOWN, operationRequest.getOperation());
-        assertEquals(values.size(), operationRequest.getValues().size());
-    }
-
-
 
     @Test
     void toOperationRequest_nullValues() {
@@ -92,7 +62,7 @@ class OperationResquestMapperTest {
 
         OperationRequest operationRequest = operationRequestMapper.toOperationRequest(operationRequestDTO);
         assertNotNull(operationRequest);
-        assertEquals(OperationsEnum.ADD, operationRequest.getOperation());
+        assertEquals(ADD, operationRequest.getOperation());
         assertNull(operationRequest.getValues());
     }
 
@@ -100,21 +70,6 @@ class OperationResquestMapperTest {
     void toOperationRequest_null() {
         OperationRequest nullOperationRequest = operationRequestMapper.toOperationRequest(null);
         assertNull(nullOperationRequest);
-    }
-
-    @Test
-    void toOperationsEnum() {
-        OperationsEnum add = operationRequestMapper.toOperationsEnum(OperationTypeDTO.ADD);
-        assertEquals(OperationsEnum.ADD, add);
-
-        OperationsEnum subtract = operationRequestMapper.toOperationsEnum(OperationTypeDTO.SUBTRACT);
-        assertEquals(OperationsEnum.SUBTRACT, subtract);
-
-        OperationsEnum biggerAndLower = operationRequestMapper.toOperationsEnum(OperationTypeDTO.BIGGER_AND_LOWER);
-        assertEquals(OperationsEnum.BIGGER_AND_LOWER, biggerAndLower);
-
-        OperationsEnum unknown = operationRequestMapper.toOperationsEnum(null);
-        assertEquals(OperationsEnum.UNKNOWN, unknown);
     }
 
 }
