@@ -22,12 +22,12 @@ paths:
       summary: This service returns the result of an operation.
       description: | 
         # Operations
-        Deppending of the operation, multiple values can be sent on the OperationRequest.
+        Depending of the operation, multiple values can be sent on the OperationRequest.
         
         Operations:
-        - add: Min two params, no limit.
-        - subtract: Min two params, no limit.
-        - bigger_and_lower: Min two params, no limit. _Note: This is only for demostration to return more than one value_
+        - `'add'`: Min two params, no limit.
+        - `'subtract'`: Min two params, no limit.
+        - `'bigger_and_lower'`: Min two params, no limit. _Note: This is only for demonstration to return more than one value_
       operationId: getOperationResult
       requestBody:
         required: true
@@ -105,13 +105,9 @@ components:
             description: 'Value to be used in the operation.'
             example: 1234.5678
         operation:
-            $ref: '#/components/schemas/OperationType'
-
-    OperationType:
-      type: string
-      description: 'Valid operations to calculate'
-      example: 'add'
-      enum: [add, subtract, bigger_and_lower]
+            type: string
+            description: 'Name of the operation to be performed.'
+            example: 'add'
 
     OperationResult:
       type: object
